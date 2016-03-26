@@ -1,0 +1,60 @@
+﻿<Window x:Class="Demo.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Demo.Wpf"
+        xmlns:creative="http://creativexamltoolkit.net/winfx/xaml/presentation"
+        mc:Ignorable="d"
+        Title="Demo"
+        Height="500"
+        Width="600"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <!-- This storyboard will make the image grow to double its size in 0.2 seconds -->
+        <Storyboard x:Key="expandStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                             To="2"
+                             Duration="0:0:0.2" />
+            <!--<DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                             To="2"
+                             Duration="0:0:0.2" />-->
+        </Storyboard>
+        <!-- This storyboard will make the image revert to its original size -->
+        <Storyboard x:Key="shrinkStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                             To="1"
+                             Duration="0:0:0.2" />
+            <!--<DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                             To="1"
+                             Duration="0:0:0.2" />-->
+        </Storyboard>
+    </Window.Resources>
+    <Grid HorizontalAlignment="Center"
+          VerticalAlignment="Center">
+        <StackPanel>
+            <TextBlock>Short text is auto generated</TextBlock>
+            <creative:HintLabel LongText="Répondez s'il vous plait"
+                                AutoGenerateShortText="True"></creative:HintLabel>
+
+            <TextBlock Margin="0,30,0,0">Customizable color and font</TextBlock>
+            <creative:HintLabel LongText="Singapore Dollar"
+                                ShortText="SGD"
+                                CornerRadius="20,0,20,0"
+                                Background="Red"
+                                Foreground="White"
+                                FontSize="40"></creative:HintLabel>
+
+            <TextBlock Margin="0,30,0,0">This one expand to the left</TextBlock>
+            <creative:HintLabel LongText="Malaysia Riggit"
+                                ShortText="MYR"
+                                AutoGenerateShortText="False"
+                                LongTextExpandDirection="Left"
+                                CornerRadius="5"
+                                Background="Blue"
+                                Foreground="Yellow"
+                                FontSize="30">
+            </creative:HintLabel>
+        </StackPanel>
+    </Grid>
+</Window>
