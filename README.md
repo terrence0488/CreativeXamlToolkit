@@ -8,7 +8,7 @@ A tiny library containing creative controls in XAML for WPF &amp; UWP
 
 Contribute
 -------------
-You can use this source code however you like. But it will be great if you can also contribute some of your code back. If you're interested in helping in this project, then keep reading. If you're not interested in helping right now that's ok too. :) Any feedback you have about using React would be greatly appreciated.
+You can use this source code however you like. But it will be great if you can also contribute some of your code back. If you're interested in helping in this project, then keep reading. If you're not interested in helping right now that's ok too. :) Any feedback you have about using CreativeXamlToolkit would be greatly appreciated.
 
 
 Creative Controls
