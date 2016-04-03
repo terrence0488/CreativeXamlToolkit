@@ -55,6 +55,10 @@
                                 Foreground="Yellow"
                                 FontSize="30">
             </creative:HintLabel>
+            <Grid Width="300">
+                <creative:MarqueeLabel FontSize="20"
+                                       Text="I found nice site containing implementation"></creative:MarqueeLabel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>
