@@ -45,15 +45,18 @@
                                 Foreground="White"
                                 FontSize="40"></creative:HintLabel>
 
-            <TextBlock Margin="0,30,0,0">This one expand to the left</TextBlock>
+            <TextBlock Margin="0,30,0,0">This one need to click, and it expands to the left</TextBlock>
             <creative:HintLabel LongText="Malaysia Riggit"
                                 ShortText="MYR"
                                 AutoGenerateShortText="False"
                                 LongTextExpandDirection="Left"
+                                ExpandOn="MouseClick"
                                 CornerRadius="5"
                                 Background="Blue"
                                 Foreground="Yellow"
-                                FontSize="30">
+                                FontSize="30"
+                                Cursor="Hand"
+                                IsExpandedChanged="HintLabel_IsExpandedChanged">
             </creative:HintLabel>
         </StackPanel>
     </Grid>

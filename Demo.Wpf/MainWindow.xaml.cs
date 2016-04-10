@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CreativeXamlToolkit.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,12 @@ namespace Demo.Wpf
             Image image = sender as Image;
             image.BeginStoryboard(story);
 
+        }
+
+        private void HintLabel_IsExpandedChanged(object sender, RoutedEventArgs e)
+        {
+            HintLabel label = (HintLabel)sender;
+            Console.WriteLine(label.IsExpanded.ToString());
         }
     }
 }

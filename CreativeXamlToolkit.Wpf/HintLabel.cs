@@ -15,6 +15,12 @@ namespace CreativeXamlToolkit.Wpf
         Right
     }
 
+    public enum ExpandOnActions
+    {
+        MouseClick,
+        MouseOver
+    }
+
     public class HintLabel : Control
     {
         static HintLabel()
@@ -22,7 +28,50 @@ namespace CreativeXamlToolkit.Wpf
             DefaultStyleKeyProperty.OverrideMetadata(typeof(HintLabel), new FrameworkPropertyMetadata(typeof(HintLabel)));
         }
 
-        #region DependencyProperty Content
+        #region Events
+
+        public static readonly RoutedEvent IsExpandedChangedEvent = EventManager.RegisterRoutedEvent(
+            "IsExpandedChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HintLabel));
+
+        /// <summary>
+        /// Is called when the IsExpanded property changed.
+        /// </summary>
+        public event RoutedEventHandler IsExpandedChanged
+        {
+            add { AddHandler(IsExpandedChangedEvent, value); }
+            remove { RemoveHandler(IsExpandedChangedEvent, value); }
+        }
+
+        void RaiseIsExpandedChangedEvent()
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(IsExpandedChangedEvent);
+            RaiseEvent(newEventArgs);
+        }
+
+        #endregion
+
+        #region DependencyProperties
+
+        internal static readonly DependencyPropertyKey IsExpandedPropertyKey =
+            DependencyProperty.RegisterReadOnly("IsExpanded", typeof(bool), typeof(HintLabel),
+                new PropertyMetadata(false,
+                    new PropertyChangedCallback(OnIsExpandedChanged)));
+
+        public static readonly DependencyProperty IsExpandedProperty = IsExpandedPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Return True when the HintLabel is expanded, False then it collapsed.
+        /// </summary>
+        public bool IsExpanded
+        {
+            get { return (bool)GetValue(IsExpandedProperty); }
+        }
+
+        private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HintLabel hintLabel = (HintLabel)d;
+            hintLabel.RaiseIsExpandedChangedEvent();
+        }
 
         /// <summary>
         /// Registers a dependency property as backing store for the ShortText property
@@ -104,6 +153,25 @@ namespace CreativeXamlToolkit.Wpf
         }
 
         /// <summary>
+        /// Registers a dependency property as backing store for the ExpandOn property
+        /// </summary>
+        public static readonly DependencyProperty ExpandOnProperty =
+            DependencyProperty.Register("ExpandOn", typeof(ExpandOnActions), typeof(HintLabel),
+            new FrameworkPropertyMetadata(
+                ExpandOnActions.MouseOver,
+                FrameworkPropertyMetadataOptions.AffectsRender |
+                FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+
+        /// <summary>
+        /// To set the action that expand the HintLabel.
+        /// </summary>
+        public ExpandOnActions ExpandOn
+        {
+            get { return (ExpandOnActions)GetValue(ExpandOnProperty); }
+            set { SetValue(ExpandOnProperty, value); }
+        }
+
+        /// <summary>
         /// Registers a dependency property as backing store for the CornerRadius property
         /// </summary>
         public static readonly DependencyProperty CornerRadiusProperty =
@@ -137,14 +205,53 @@ namespace CreativeXamlToolkit.Wpf
 
                 Popup popLongText = this.Template.FindName("popLongText", this) as Popup;
                 popLongText.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(placePopup);
+                popLongText.Opened += (sender, e) => { SetValue(IsExpandedPropertyKey, true); };
+                popLongText.Closed += (sender, e) => { SetValue(IsExpandedPropertyKey, false); };
 
                 Border brdShortText = this.Template.FindName("brdShortText", this) as Border;
-                brdShortText.MouseEnter += BrdShortText_MouseEnter; ;
-
                 Border brdLongText = this.Template.FindName("brdLongText", this) as Border;
-                brdLongText.MouseLeave += BrdLongText_MouseLeave;
+
+                if (this.ExpandOn == ExpandOnActions.MouseOver)
+                {
+                    brdShortText.MouseEnter += BrdShortText_MouseEnter;
+                    brdLongText.MouseMove += BrdLongText_MouseMove;
+                }
+                else if (this.ExpandOn == ExpandOnActions.MouseClick)
+                {
+                    brdShortText.MouseLeftButtonUp += BrdShortText_MouseLeftButtonUp;
+                }
+
                 if (LongTextExpandDirection == LongTextExpandDirections.Left)
                     brdLongText.RenderTransformOrigin = new Point(1, 0);
+            }
+        }
+
+        private void BrdShortText_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!IsExpanded)
+                ExpandLongText();
+            else
+                CollapseLongText();
+        }
+
+        private void BrdShortText_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ExpandLongText();
+        }
+
+        private void BrdLongText_MouseMove(object sender, MouseEventArgs e)
+        {
+            Border brdLongText = (Border)sender;
+
+            //When mouse is captured, IsMouseOver property will always be true.
+            //Therefore, manual mouse over detection is needed.
+            Point pt = e.GetPosition(brdLongText);
+            if ((pt.X < 0.0) || (pt.Y < 0.0) || (pt.X >= brdLongText.ActualWidth) || (pt.Y >= brdLongText.ActualHeight))
+            {
+                CollapseLongText();
+
+                if (brdLongText.IsMouseCaptured)
+                    brdLongText.ReleaseMouseCapture();
             }
         }
 
@@ -164,13 +271,7 @@ namespace CreativeXamlToolkit.Wpf
             return ttplaces;
         }
 
-        private void BrdLongText_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Popup popLongText = this.Template.FindName("popLongText", this) as Popup;
-            popLongText.IsOpen = false;
-        }
-
-        private void BrdShortText_MouseEnter(object sender, MouseEventArgs e)
+        private void ExpandLongText()
         {
             Popup popLongText = this.Template.FindName("popLongText", this) as Popup;
             popLongText.IsOpen = true;
@@ -180,6 +281,16 @@ namespace CreativeXamlToolkit.Wpf
             brdLongText.RenderTransform = trans;
             DoubleAnimation anim = new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(150));
             trans.BeginAnimation(ScaleTransform.ScaleXProperty, anim);
+
+            //If Expand action is MouseOver, then we need to capture the mouse to fire Mousemove.
+            if (ExpandOn == ExpandOnActions.MouseOver)
+                brdLongText.CaptureMouse();
+        }
+
+        private void CollapseLongText()
+        {
+            Popup popLongText = this.Template.FindName("popLongText", this) as Popup;
+            popLongText.IsOpen = false;
         }
     }
 }
