@@ -41,6 +41,6 @@ Hint label present abbreviation of phrases and expand to full form when mouse ov
 
 
 ### License
-VSTSMonitor is released under the [MIT License](https://opensource.org/licenses/MIT).
+CreativeXamlToolkit is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 
