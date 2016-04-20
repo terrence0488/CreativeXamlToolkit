@@ -35,7 +35,8 @@
         <StackPanel>
             <TextBlock>Short text is auto generated</TextBlock>
             <creative:HintLabel LongText="Répondez s'il vous plait"
-                                AutoGenerateShortText="True"></creative:HintLabel>
+                                AutoGenerateShortText="True"
+                                Padding="10,3"></creative:HintLabel>
 
             <TextBlock Margin="0,30,0,0">Customizable color and font</TextBlock>
             <creative:HintLabel LongText="Singapore Dollar"
@@ -43,17 +44,22 @@
                                 CornerRadius="20,0,20,0"
                                 Background="Red"
                                 Foreground="White"
-                                FontSize="40"></creative:HintLabel>
+                                FontSize="40"
+                                Padding="20,3"></creative:HintLabel>
 
-            <TextBlock Margin="0,30,0,0">This one expand to the left</TextBlock>
+            <TextBlock Margin="0,30,0,0">This one need to click, and it expands to the left</TextBlock>
             <creative:HintLabel LongText="Malaysia Riggit"
                                 ShortText="MYR"
                                 AutoGenerateShortText="False"
                                 LongTextExpandDirection="Left"
+                                ExpandOn="MouseClick"
                                 CornerRadius="5"
                                 Background="Blue"
                                 Foreground="Yellow"
-                                FontSize="30">
+                                FontSize="30"
+                                Cursor="Hand"
+                                IsExpandedChanged="HintLabel_IsExpandedChanged"
+                                Padding="10,10">
             </creative:HintLabel>
             <Grid Width="300">
                 <creative:MarqueeLabel FontSize="20"
