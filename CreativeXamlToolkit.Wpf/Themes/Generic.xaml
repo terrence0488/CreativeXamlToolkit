@@ -22,7 +22,9 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <TextBlock x:Name="tblShortText"
-                                           FontWeight="Bold"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           FontFamily="{TemplateBinding FontFamily}"
+                                           FontStyle="{TemplateBinding FontStyle}"
                                            Foreground="{TemplateBinding Foreground}"
                                            FontSize="{TemplateBinding FontSize}"
                                            Text="{TemplateBinding ShortText}"></TextBlock>
@@ -49,7 +51,9 @@
                                         </Border.Style>
                                         <Grid>
                                             <TextBlock x:Name="tblLongText"
-                                                       FontWeight="Bold"
+                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                       FontFamily="{TemplateBinding FontFamily}"
+                                                       FontStyle="{TemplateBinding FontStyle}"
                                                        Foreground="{TemplateBinding Foreground}"
                                                        FontSize="{TemplateBinding FontSize}"
                                                        Text="{TemplateBinding LongText}">

@@ -189,6 +189,13 @@ namespace CreativeXamlToolkit.Wpf
 
         #endregion DependencyProperty Content
 
+        #region Public Method
+        public virtual void Collapse()
+        {
+            CollapseLongText();
+        }
+        #endregion
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -207,26 +214,24 @@ namespace CreativeXamlToolkit.Wpf
                 popLongText.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(placePopup);
                 popLongText.Opened += (sender, e) => { SetValue(IsExpandedPropertyKey, true); };
                 popLongText.Closed += (sender, e) => { SetValue(IsExpandedPropertyKey, false); };
-
-                Border brdShortText = this.Template.FindName("brdShortText", this) as Border;
-                Border brdLongText = this.Template.FindName("brdLongText", this) as Border;
-
+                
                 if (this.ExpandOn == ExpandOnActions.MouseOver)
                 {
-                    brdShortText.MouseEnter += BrdShortText_MouseEnter;
-                    brdLongText.MouseMove += BrdLongText_MouseMove;
+                    this.MouseEnter += HintLabel_MouseEnter;
+                    this.MouseMove += HintLabel_MouseMove;
                 }
                 else if (this.ExpandOn == ExpandOnActions.MouseClick)
                 {
-                    brdShortText.MouseLeftButtonUp += BrdShortText_MouseLeftButtonUp;
+                    this.MouseLeftButtonUp += HintLabel_MouseLeftButtonUp;
                 }
 
+                Border brdLongText = this.Template.FindName("brdLongText", this) as Border;
                 if (LongTextExpandDirection == LongTextExpandDirections.Left)
                     brdLongText.RenderTransformOrigin = new Point(1, 0);
             }
         }
 
-        private void BrdShortText_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void HintLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (!IsExpanded)
                 ExpandLongText();
@@ -234,24 +239,20 @@ namespace CreativeXamlToolkit.Wpf
                 CollapseLongText();
         }
 
-        private void BrdShortText_MouseEnter(object sender, MouseEventArgs e)
+        private void HintLabel_MouseEnter(object sender, MouseEventArgs e)
         {
             ExpandLongText();
         }
 
-        private void BrdLongText_MouseMove(object sender, MouseEventArgs e)
+        private void HintLabel_MouseMove(object sender, MouseEventArgs e)
         {
-            Border brdLongText = (Border)sender;
+            Border brdLongText = this.Template.FindName("brdLongText", this) as Border;
 
-            //When mouse is captured, IsMouseOver property will always be true.
-            //Therefore, manual mouse over detection is needed.
+            //determine if mouse cursor is in within the control
             Point pt = e.GetPosition(brdLongText);
             if ((pt.X < 0.0) || (pt.Y < 0.0) || (pt.X >= brdLongText.ActualWidth) || (pt.Y >= brdLongText.ActualHeight))
             {
                 CollapseLongText();
-
-                if (brdLongText.IsMouseCaptured)
-                    brdLongText.ReleaseMouseCapture();
             }
         }
 
@@ -281,10 +282,6 @@ namespace CreativeXamlToolkit.Wpf
             brdLongText.RenderTransform = trans;
             DoubleAnimation anim = new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(150));
             trans.BeginAnimation(ScaleTransform.ScaleXProperty, anim);
-
-            //If Expand action is MouseOver, then we need to capture the mouse to fire Mousemove.
-            if (ExpandOn == ExpandOnActions.MouseOver)
-                brdLongText.CaptureMouse();
         }
 
         private void CollapseLongText()
