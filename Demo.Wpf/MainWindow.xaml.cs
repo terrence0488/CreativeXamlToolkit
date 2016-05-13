@@ -1,4 +1,5 @@
 ﻿using CreativeXamlToolkit.Wpf;
+using Demo.Wpf.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace Demo.Wpf
         public MainWindow()
         {
             InitializeComponent();
+            Settings.Default.SettingsKey[ = "True";
         }
 
         private void image1_MouseEnter(object sender, MouseEventArgs e)

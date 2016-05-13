@@ -7,7 +7,7 @@
         xmlns:creative="http://creativexamltoolkit.net/winfx/xaml/presentation"
         mc:Ignorable="d"
         Title="Demo"
-        Height="500"
+        Height="500" 
         Width="600"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
