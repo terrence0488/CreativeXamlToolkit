@@ -1,0 +1,41 @@
+﻿<Window x:Class="Demo.Wpf.DrawingBoardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Demo.Wpf"
+        mc:Ignorable="d"
+        Title="DrawingBoardWindow"
+        Height="500"
+        Width="500"
+        WindowState="Maximized"
+        WindowStyle="None">
+    <DockPanel>
+        <Button DockPanel.Dock="Top"
+                Name="btnClose"
+                Content="X"
+                Width="25"
+                HorizontalAlignment="Right"
+                Click="btnClose_Click"></Button>
+        <StackPanel DockPanel.Dock="Left"
+                    Orientation="Vertical">
+            <Button Name="btnPen"
+                    Content="Pen"
+                    Click="btnPen_Click"></Button>
+            <Button Name="btnEraser"
+                    Content="Eraser"
+                    Click="btnEraser_Click"></Button>
+            <Button Name="btnSaveImage"
+                    Content="Save"
+                    Click="btnSaveImage_Click"></Button>
+        </StackPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <InkCanvas Name="inkMain" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch">
+                <InkCanvas.Background>
+                    <ImageBrush ImageSource="C:\Users\terre\Source\Repos\CreativeXamlToolkit\Demo.Wpf\square.png" />
+                </InkCanvas.Background>
+            </InkCanvas>
+        </Grid>
+    </DockPanel>
+</Window>

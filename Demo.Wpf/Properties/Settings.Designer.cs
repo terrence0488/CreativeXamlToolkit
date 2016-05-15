@@ -22,5 +22,17 @@ namespace Demo.Wpf.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string fakeDB {
+            get {
+                return ((string)(this["fakeDB"]));
+            }
+            set {
+                this["fakeDB"] = value;
+            }
+        }
     }
 }
